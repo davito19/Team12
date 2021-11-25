@@ -1,9 +1,20 @@
-const calcularPocentajes=(limitePM10,limitePM2punto5, limiteNO2, limiteCO, limiteS02, valorPM10, valorPM2punto5, valorNO2, valorCO,valorS02)=>{    
-    let porcentajePM10= limitePM10?valorPM10*100/limitePM10:0;
-    let porcentajePMpunto2=limitePM2punto5? valorPM2punto5*100/limitePM2punto5:0;
-    let porcentajeNO2= limiteNO2? valorNO2*100/ limiteNO2:0;
-    let porcentajeCO= limiteCO?  valorCO*100/ limiteCO:0;
-    let porcentajeSO2= limiteS02?  valorS02*100/ limiteS02:0;
+//const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const calcularPocentajes=async(
+    valorPM10,
+    valorPM2punto5,
+    valorNO2,
+    valorCO,
+    valorS02)=>{    
+    let response= await fetch("https://misiontic2022upb.vercel.app/api/air-quality/limits");
+    let limits= await response.json();
+    console.log("limits");
+
+    console.log(limits);
+    let porcentajePM10= limits.limitePM10?valorPM10*100/limits.limitePM10:0;
+    let porcentajePMpunto2=limits.limitePM2punto5? valorPM2punto5*100/limits.limitePM2punto5:0;
+    let porcentajeNO2= limits.limiteNO2? valorNO2*100/ limits.limiteNO2:0;
+    let porcentajeCO= limits.limiteCO?  valorCO*100/ limits.limiteCO:0;
+    let porcentajeSO2= limits.limiteS02?  valorS02*100/ limits.limiteS02:0;
     let salida={
         porcentajePM10:porcentajePM10,
         porcentajePM2punto5:porcentajePMpunto2,
@@ -13,9 +24,15 @@ const calcularPocentajes=(limitePM10,limitePM2punto5, limiteNO2, limiteCO, limit
     }
     console.log(salida);
     return salida;
-}
+    };
 
-const registrarAQI=(value)=>{
+const registrarAQI=async(value)=>{
+    let indice=-1;
+    let response= await fetch("https://misiontic2022upb.vercel.app/api/air-quality/aqi-ranges");
+    let rangosAQI= await response.json();
+    console.log("rangosAQI");
+
+    console.log(rangosAQI);
 
     if (value<0 ||value>300){
         return "fuera_de_rango"
@@ -23,25 +40,20 @@ const registrarAQI=(value)=>{
         console.log("value=" +value);
         let result
 
-        global.rangosAQI.forEach(rango=>{
+        rangosAQI.forEach(rango=>{
             if (value>=rango.de && value<=rango.hasta){
                 console.log(rango.etiqueta);
                 result= rango.etiqueta;
                 
             }
-        })
+        });
         return result;
-    }
+    };
 }
 
-global.rangosAQI=[
-    {etiqueta: 'excelente', de: 0, hasta:30},
-    {etiqueta: 'bueno', de: 31, hasta:50},
-    {etiqueta: 'moderado', de: 51, hasta:100},
-    {etiqueta: 'bajo', de: 101, hasta:150},
-    {etiqueta: 'insalubre', de: 151, hasta:200},
-    {etiqueta: 'peligroso', de: 201, hasta:300}
-]
 
 module.exports.registrarAQI= registrarAQI;
 module.exports.calcularPocentajes= calcularPocentajes;
+
+//registrarAQI(50);
+//calcularPocentajes(4,100,100,100,100)
