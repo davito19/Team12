@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src.js",
   "scripts": {
-    "devStart": "nodemon src.js"
+    "devStart": "nodemon index.js"
   },
   "repository": {
     "type": "git",
