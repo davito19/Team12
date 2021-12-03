@@ -3,24 +3,18 @@ const app = express();
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
-app.get('/api/air-quality/aqi_ranges', (req, res)=> {
-  console.log(req.body);
-  console.log(req.params);
-  var aqi_ranges = req.params.aqi_ranges
-  res.sendFile('api ${req.params.aqi_ranges}').type('json');
+app.get('/api/air-quality/aqi-ranges', (req, res)=> {
+  res.json(aqi_ranges)
 });
 
-app.post('/api/air-quality/aqi_ranges', (req, res)=>{
-  console.log(req.body);
-  console.log(req.params);
-  res.sendFile('api ${req.params.aqi_ranges}').type('json')
+app.post('/api/air-quality/aqi-ranges', (req, res)=>{
+  var ranges = req.body;
+  aqi_ranges.push(ranges);
+  res.json(aqi_ranges)
 });
 
 app.get('/api/air-quality/limits', (req, res)=>{
-  console.log(req.body);
-  console.log(req.params);
-  var limits = req.params.limits
-  res.sendFile('api ${req.params.limits}').type('json')
+  res.json(limits)
 });
 
 module.exports=app;
